@@ -14,24 +14,38 @@ def extended_gcd(a,b):
     """
     if a == 0 and b == 0:
         return 
+    
+    switch = False
     if a > b:
         temp = a
         a = b
         b = temp
-    
-    if a == 0 :
-        return (b, 0, 1)
-    
-    r = b % a
-    (gcd, newA, newB) = extended_gcd(a, r)
-         
+        switch = True
+            
+    def helper(a, b):
         
-    x = newB - (b // a) * newA
-    y = newA
-         
-    return (gcd, x, y)
+        if a > b:
+            temp = a
+            a = b
+            b = temp
+            
+        
+        if a == 0 :
+            return (b, 0, 1)
+        
+        r = b % a
+        (gcd, newA, newB) = helper(a, r)
+             
+            
+        x = newB - (b // a) * newA
+        y = newA
+        
+        return (gcd, x, y)
     
-   
+    gcd, x, y = helper(a, b)
+    if switch:
+         return(gcd, y, x)
+    return (gcd, x, y)
 
 def modular_inverse(a,n):
     """
@@ -133,3 +147,8 @@ def generate_prime(digits):
         if is_prime(n):
             return n
     return None
+
+print("Test 984, 11")
+print(extended_gcd(984, 11))
+print("Test 11, 984")
+print(extended_gcd(11, 984))
