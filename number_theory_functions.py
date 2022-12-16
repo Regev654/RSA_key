@@ -37,22 +37,38 @@ def extended_gcd(a, b):
     """
     if a == 0 and b == 0:
         return
+
+    switch = False
     if a > b:
         temp = a
         a = b
         b = temp
+        switch = True
 
-    if a == 0:
-        return (b, 0, 1)
+    def helper(a, b):
 
-    r = b % a
-    (gcd, newA, newB) = extended_gcd(a, r)
+        if a > b:
+            temp = a
+            a = b
+            b = temp
 
-    x = newB - (b // a) * newA
-    y = newA
 
+        if a == 0 :
+            return (b, 0, 1)
+
+        r = b % a
+        (gcd, newA, newB) = helper(a, r)
+
+
+        x = newB - (b // a) * newA
+        y = newA
+
+        return (gcd, x, y)
+
+    gcd, x, y = helper(a, b)
+    if switch:
+         return(gcd, y, x)
     return (gcd, x, y)
-
 
 def modular_inverse(a, n):
     """
