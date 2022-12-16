@@ -49,7 +49,18 @@ def modular_exponent(a, d, n):
     -------
     b: such that b == (a**d) % n
     """
-
+    power = 0
+    temp = 0
+    a_new = a%n
+    mod_sum = 1
+    binary_d = bin(d)
+    print(binary_d)
+    for i in binary_d[-1:1:-1]:
+        number = int(i)
+        mod_sum*=a_new**(number*2**power)%n
+        mod_sum = mod_sum%n
+        power += 1
+    return mod_sum
 def miller_rabin(n):
     """
     Checks the primality of n using the Miller-Rabin test
