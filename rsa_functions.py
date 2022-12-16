@@ -14,7 +14,7 @@ class RSA:
         self.private_key = private_key
 
     @staticmethod
-    def generate_from_prime(prime_p, prime_q):
+    def generate_from_prime(prime_p, prime_q, e=None, digits=10):
         """
         Creates an RSA encryption system object
 
@@ -22,6 +22,7 @@ class RSA:
         ----------
         prime_p : The first prime number
         prime_q : The second prime number
+        e: a specific public key
 
         Returns
         -------
@@ -32,7 +33,8 @@ class RSA:
         n = prime_q * prime_p
         phi_n = (prime_q - 1) * (prime_p - 1)
 
-        e = generate_random_coprime(phi_n, prime_p)
+        if e is None:
+            e = generate_random_coprime(phi_n, digits)
         d = modular_inverse(e, phi_n)
         return RSA((n, e), (n, d))
 
@@ -53,7 +55,7 @@ class RSA:
         """
         q = generate_prime(digits)
         p = generate_prime(digits)
-        return RSA.generate_from_prime(q, p)
+        return RSA.generate_from_prime(q, p, None, digits)
 
     def encrypt(self, m):
         """

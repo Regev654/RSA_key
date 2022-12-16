@@ -1,5 +1,6 @@
 import unittest
 import number_theory_functions
+from number_theory_functions import modular_exponent
 from rsa_functions import RSA
 
 class TestNumberTheory(unittest.TestCase):
@@ -33,4 +34,17 @@ class TestRSA(unittest.TestCase):
             self.assertEqual(M,MM)
 
 if __name__ == '__main__':
+    print("question 3")
+    rsa3 = RSA.generate_from_prime(3491, 3499, 3499)
+    message = rsa3.decrypt(42)
+    print(f"the decrypted msg={message}")
+    print(f"the encrypted msg={rsa3.encrypt(message)}")
+
+    print("question 5")
+    rsa5 = RSA.generate_from_prime(7919, 6841)
+    message = 25
+    encrypted = rsa5.encrypt(message)
+    print(f"the encrypted msg = {encrypted}")
+    print(f"the decrypted msg = {rsa5.decrypt(encrypted)}")
+    print(f"the public key used = {rsa5.public_key}")
     unittest.main()

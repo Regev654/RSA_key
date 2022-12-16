@@ -1,7 +1,7 @@
 from random import randrange, randint
 
 
-def generate_random_coprime(phi_n, max_digits = 10):
+def generate_random_coprime(phi_n, max_digits=10):
     """
 
     Parameters
@@ -16,7 +16,7 @@ def generate_random_coprime(phi_n, max_digits = 10):
     found = False
     number = 0
     while not found:
-        i = randint(1, max_digits)
+        i = randint(2, max_digits)
         number = generate_prime(i)
         found = extended_gcd(number, phi_n)[0] == 1
 
@@ -52,13 +52,11 @@ def extended_gcd(a, b):
             a = b
             b = temp
 
-
-        if a == 0 :
+        if a == 0:
             return (b, 0, 1)
 
         r = b % a
         (gcd, newA, newB) = helper(a, r)
-
 
         x = newB - (b // a) * newA
         y = newA
@@ -67,8 +65,9 @@ def extended_gcd(a, b):
 
     gcd, x, y = helper(a, b)
     if switch:
-         return(gcd, y, x)
+        return (gcd, y, x)
     return (gcd, x, y)
+
 
 def modular_inverse(a, n):
     """
@@ -90,7 +89,7 @@ def modular_inverse(a, n):
     return None
 
 
-def modular_exponent(a, d, n):
+def modular_exponent(base, exponent, modulu):
     """
     Returns a to the power of d modulo n
 
@@ -104,17 +103,29 @@ def modular_exponent(a, d, n):
     -------
     b: such that b == (a**d) % n
     """
-    power = 0
-    temp = 0
-    a_new = a % n
+
     mod_sum = 1
-    binary_d = bin(d)
-    print(binary_d)
-    for i in binary_d[-1:1:-1]:
+    binary_exponent = bin(exponent)
+    current_index = 0
+    last_index = 0
+    last_calc = 0
+    base = base % modulu
+    for i in binary_exponent[-1:1:-1]:
         number = int(i)
-        mod_sum *= a_new ** (number * 2 ** power) % n
-        mod_sum = mod_sum % n
-        power += 1
+        if number == 0:
+            current_index += 1
+            continue
+
+        if last_calc == 0:
+            last_calc = (base ** (2 ** current_index)) % modulu
+        else:
+            new_power = (2 ** current_index) // (2 ** last_index)
+            last_calc = (last_calc ** new_power) % modulu
+
+        last_index = current_index
+        current_index += 1
+        mod_sum = (last_calc * mod_sum) % modulu
+
     return mod_sum
 
 
