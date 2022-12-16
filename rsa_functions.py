@@ -7,10 +7,34 @@ N_INDEX = 0
 E_INDEX = 1
 D_INDEX = 1
 
-class RSA():
+
+class RSA:
     def __init__(self, public_key, private_key=None):
         self.public_key = public_key
         self.private_key = private_key
+
+    @staticmethod
+    def generate_from_prime(prime_p, prime_q):
+        """
+        Creates an RSA encryption system object
+
+        Parameters
+        ----------
+        prime_p : The first prime number
+        prime_q : The second prime number
+
+        Returns
+        -------
+        RSA: The RSA system containing:
+        * The public key (N,e)
+        * The private key (N,d)
+        """
+        n = prime_q * prime_p
+        phi_n = (prime_q - 1) * (prime_p - 1)
+
+        e = generate_random_coprime(phi_n, prime_p)
+        d = modular_inverse(e, phi_n)
+        return RSA((n, e), (n, d))
 
     @staticmethod
     def generate(digits=10):
@@ -29,12 +53,7 @@ class RSA():
         """
         q = generate_prime(digits)
         p = generate_prime(digits)
-        n = q * p
-        phi_n = (q - 1) * (p - 1)
-
-        e = generate_random_coprime(phi_n, digits)
-        d = modular_inverse(e, phi_n)
-        return RSA((n, e), (n, d))
+        return RSA.generate_from_prime(q, p)
 
     def encrypt(self, m):
         """
@@ -63,4 +82,3 @@ class RSA():
         m : The decrypted plaintext
        """
         return modular_exponent(c, self.private_key[D_INDEX], self.private_key[N_INDEX])
-
